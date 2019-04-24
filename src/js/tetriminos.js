@@ -1,3 +1,6 @@
+/*
+Tetriminos' colors
+*/
 O_COLOR = "#fffa00";
 J_COLOR = "#002eff";
 L_COLOR = "#ff9400";

@@ -1,38 +1,21 @@
 // O J L I T Z S
-
-/*function setup() {
-  generateBag();
-  print(bag);
-  highscore = localStorage.getItem("highscore");
-  lvl = new Level(0,48);
-  gamePaused = false;
-  TILE_SIZE = 30;
-  TILES_W = 10;
-  TILES_H = 22;
-  createCanvas(TILE_SIZE*(TILES_W+3),TILE_SIZE*(TILES_H+1));
-  WIDTH = TILE_SIZE*TILES_W;
-  HEIGHT = TILE_SIZE*TILES_H
-  pz = new Playzone(TILES_W,TILES_H);
-  tetriminos = ['O','J','L','I','T','Z','S'];
-  currentPiece = createNewTetrimino(random(tetriminos));
-  nextPiece = createNewTetrimino(random(tetriminos));
-}*/
 var currentPiece;
 var nextPiece;
 
-
 function setup(){
+  createCanvas(window.innerWidth, window.innerHeight);
+  /*
+    variables initialization
+  */
   ai = true;
   showPlayzone = true;
   showFalling = true;
   highscore = localStorage.getItem("highscore");
-  lvl = new Level(0,48);
   gamePaused = false;
+  lvl = new Level(0,48);
   TILE_SIZE = 20;
   TILES_W = 10;
   TILES_H = 22;
-  //0 pas de chute, 1 chute rapide, 2 chute normale
-  createCanvas(window.innerWidth, window.innerHeight);
   WIDTH = TILE_SIZE*TILES_W;
   HEIGHT = TILE_SIZE*TILES_H
   pz = new Playzone(TILES_W,TILES_H);
@@ -40,24 +23,8 @@ function setup(){
 
   nextShape();
   roundState = getState();
-  if(ai)createInitialPopulation();
-}
-
-function updateScore(){
-  let linesComplete = pz.linesComplete();
-  for(let l=0 ; l<linesComplete.length ; l++){
-    pz.breakLine(linesComplete[l]);
-    pz.lowerAllAbove(linesComplete[l]);
-  }
-  if(linesComplete.length > 0){
-    lvl.addLinesComplete(linesComplete.length);
-    lvl.addPoints(linesComplete.length-1);
-    linesComplete = [];
-  }
-  if(lvl.linesComplete >= 10){
-    lvl.up();
-    lvl.linesComplete = 0;
-  } 
+  if(ai)
+    firstGeneration();
 }
 
 function draw() {
@@ -169,8 +136,21 @@ function draw() {
   }
 }
 
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
+function updateScore(){
+  let linesComplete = pz.linesComplete();
+  for(let l=0 ; l<linesComplete.length ; l++){
+    pz.breakLine(linesComplete[l]);
+    pz.lowerAllAbove(linesComplete[l]);
+  }
+  if(linesComplete.length > 0){
+    lvl.addLinesComplete(linesComplete.length);
+    lvl.addPoints(linesComplete.length-1);
+    linesComplete = [];
+  }
+  if(lvl.linesComplete >= 10){
+    lvl.up();
+    lvl.linesComplete = 0;
+  } 
 }
 
 function showControl(){
@@ -195,9 +175,13 @@ function showControl(){
     ,10,HEIGHT+size*2);
 }
 
+/*********************************************************
+ *  KEYS MANAGEMENT
+ */
 function keyPressed(){
   var characterPressed = String.fromCharCode(keyCode);
   if(!gamePaused && !ai){
+    // controls when human is playing
     switch(keyCode){
       case LEFT_ARROW:
         moveLeft(currentPiece);
@@ -214,18 +198,22 @@ function keyPressed(){
           currentPiece.update();
         }
         break;
-      case 80: //p
+      case 80: // P
         gamePaused = !gamePaused;
         break;
-      case 82: //r
+      case 82: // R
         reset(1);
         break;
-      case 65:
+      case 65: // A
         ai = !ai;
         break;
     }
   } else{
+    // controls when AI is playing
     switch(characterPressed){
+      case "G":
+        print(shuffle(['A','B','C']));
+        break;
       case "P":
           gamePaused = !gamePaused;
           break;
@@ -235,7 +223,7 @@ function keyPressed(){
       case "S":
         speedIndex = (speedIndex+1)%3 ;
         break;
-      case "A": // a
+      case "A":
         ai = !ai;
         break;
       case "L":
@@ -249,8 +237,6 @@ function keyPressed(){
         loadArchive(bestGeneration);
         break;
       case "R":
-        /*localStorage.setItem("highscore", 0);
-        highscore = localStorage.getItem("highscore");*/
         reset(1);
         break;
       case "M":

@@ -14,6 +14,8 @@ var moveLimits = [100,500,1000,3000,10000,-1];
 var moveIndex = 0;
 var moveLimit = moveLimits[moveIndex];
 var movesTaken = 0;
+
+//0 pas de chute, 1 chute rapide, 2 chute normale
 var speedIndex = 0;
 
 var mutationRate = 0.05;
@@ -39,13 +41,13 @@ function showAI(){
     "rowsCleared : "+g.rowsCleared.toFixed(4)+"\n"+
     "cumulativeHeight : "+g.cumulativeHeight.toFixed(4)+"\n"+
     "holes : "+g.holes.toFixed(4)+"\n"+
-    "relativeHeight : "+g.relativeHeight.toFixed(4)+"\n"+
-    "roughness : "+g.roughness.toFixed(4)+"\n"+
-    "weightedHeight : "+g.weightedHeight.toFixed(4)+"\n"
+  //  "relativeHeight : "+g.relativeHeight.toFixed(4)+"\n"+
+    "roughness : "+g.roughness.toFixed(4)+"\n"
+   // "weightedHeight : "+g.weightedHeight.toFixed(4)+"\n"
     ,WIDTH+10,HEIGHT-25*size);
 }
 
-function createInitialPopulation() {
+function firstGeneration() {
     //print("first population");
     //inits the array
     genomes = [];
@@ -60,11 +62,11 @@ function createInitialPopulation() {
             rowsCleared: Math.random(),
             //the absolute height of the highest column to the power of 1.5
             //added so that the algorithm can be able to detect if the blocks are stacking too high
-            weightedHeight: Math.random()  * -1,
+       //     weightedHeight: Math.random()  * -1,
             //The sum of all the column’s heights
             cumulativeHeight: Math.random() * -1,
             //the highest column minus the lowest column
-            relativeHeight: Math.random() * -1,
+        //    relativeHeight: Math.random() * -1,
             //the sum of all the empty cells that have a block above them (basically, cells that are unable to be filled)
             holes: Math.random() * -1,
             // the sum of absolute differences between the height of each column 
@@ -95,7 +97,6 @@ function evaluateNextGenome() {
     makeNextMove();
 }
 
-//evolve
 function evolve() {
 
     print("Generation " + generation + " evaluated.");
@@ -132,7 +133,9 @@ function evolve() {
    //create children array
    var children = [];
    //add the fittest genome to array
-   children.push(clone(genomes[0]));
+   for(var i=0 ; i < 10 ; i++){
+       children.push(clone(genomes[i]));
+   }
    //add population sized amount of children
    while (children.length < populationSize) {
        //crossover between two random genomes to make a child
@@ -158,7 +161,6 @@ function showStatsGenome(message){
     print("["+message+"] Genome "+currentGenome+" of generation "+generation+" scores "+genomes[currentGenome].fitness+" pts with "+totalLines+" lines("+lvl.comboTetris+" tetris).");
 }
 
-//makenextmove
 function makeNextMove() {
     //increment number of moves taken
     movesTaken++;
@@ -239,8 +241,6 @@ function makeNextMove() {
     }
 }
 
-//bag
-
 function getHighestRatedMove(moves) {
     //start these values off small
     var maxRating = -10000000000000;
@@ -312,18 +312,18 @@ function getAllPossibleMoves() {
                 //set the 7 parameters of a genome
                 var algorithm = {
                     rowsCleared: pz.linesComplete().length,
-                    weightedHeight: Math.pow(pz.getHeight(), 1.5),
+                  //  weightedHeight: Math.pow(pz.getHeight(), 1.5),
                     cumulativeHeight: pz.getCumulativeHeight(),
-                    relativeHeight: pz.getRelativeHeight(),
+                  //  relativeHeight: pz.getRelativeHeight(),
                     holes: pz.getHoles(),
                     roughness: pz.getRoughness()
                 };
                 //rate each move
                 var rating = 0;
                 rating += algorithm.rowsCleared * genomes[currentGenome].rowsCleared;
-                rating += algorithm.weightedHeight * genomes[currentGenome].weightedHeight;
+              //  rating += algorithm.weightedHeight * genomes[currentGenome].weightedHeight;
                 rating += algorithm.cumulativeHeight * genomes[currentGenome].cumulativeHeight;
-                rating += algorithm.relativeHeight * genomes[currentGenome].relativeHeight;
+              //  rating += algorithm.relativeHeight * genomes[currentGenome].relativeHeight;
                 rating += algorithm.holes * genomes[currentGenome].holes;
                 rating += algorithm.roughness * genomes[currentGenome].roughness;
                 //if the move loses the game, lower its rating
@@ -350,9 +350,9 @@ function makeChild(mum, dad) {
         id : Math.random(),
         //all these params are randomly selected between the mom and dad genome
         rowsCleared: randomChoice(mum.rowsCleared, dad.rowsCleared),
-        weightedHeight: randomChoice(mum.weightedHeight, dad.weightedHeight),
+      //  weightedHeight: randomChoice(mum.weightedHeight, dad.weightedHeight),
         cumulativeHeight: randomChoice(mum.cumulativeHeight, dad.cumulativeHeight),
-        relativeHeight: randomChoice(mum.relativeHeight, dad.relativeHeight),
+      //  relativeHeight: randomChoice(mum.relativeHeight, dad.relativeHeight),
         holes: randomChoice(mum.holes, dad.holes),
         roughness: randomChoice(mum.roughness, dad.roughness),
         //no fitness. yet.
@@ -364,15 +364,15 @@ function makeChild(mum, dad) {
     if (Math.random() < mutationRate) {
         child.rowsCleared = child.rowsCleared + Math.random() * mutationStep * 2 - mutationStep;
     }
-    if (Math.random() < mutationRate) {
+  /*  if (Math.random() < mutationRate) {
         child.weightedHeight = child.weightedHeight + Math.random() * mutationStep * 2 - mutationStep;
-    }
+    }*/
     if (Math.random() < mutationRate) {
         child.cumulativeHeight = child.cumulativeHeight + Math.random() * mutationStep * 2 - mutationStep;
     }
-    if (Math.random() < mutationRate) {
+  /*  if (Math.random() < mutationRate) {
         child.relativeHeight = child.relativeHeight + Math.random() * mutationStep * 2 - mutationStep;
-    }
+   }*/
     if (Math.random() < mutationRate) {
         child.holes = child.holes + Math.random() * mutationStep * 2 - mutationStep;
     }
@@ -465,14 +465,26 @@ function randomWeightedNumBetween(min, max) {
 
 function generateBag() {
     bag = [];
-    var contents = "";
-    //7 shapes
-    for (var i = 0; i < 7; i++) {
-        var shape = random(tetriminos);
-        bag[i] = shape;
-    }
-    //reset bag index
     bagIndex = 0;
+    let tempBag = clone(tetriminos);
+    bag = shuffle(tempBag);
+}
+
+function shuffle(arra1) {
+    var ctr = arra1.length, temp, index;
+
+    // While there are elements in the array
+    while (ctr > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * ctr);
+        // Decrease ctr by 1
+        ctr--;
+        // And swap the last element with it
+        temp = arra1[ctr];
+        arra1[ctr] = arra1[index];
+        arra1[index] = temp;
+    }
+    return arra1;
 }
 
 function randomKey(obj) {
@@ -507,4 +519,8 @@ function randomChoice(propOne, propTwo) {
     } else {
         return clone(propTwo);
     }
+}
+
+function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }

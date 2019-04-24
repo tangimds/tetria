@@ -1,4 +1,4 @@
-TabScore = [40,100,300,1200];
+tabScore = [40,100,300,1200];
 
 class Level{
   constructor(lvl,spd){
@@ -61,7 +61,7 @@ class Level{
   }
   
   addPoints(x){
-    this.score += TabScore[x]*(this.level+1);
+    this.score += tabScore[x]*(this.level+1);
   }
   
   show(){
