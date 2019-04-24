@@ -11,19 +11,13 @@ The rules used here are the basic Tetris rules set :
 * the next piece is known
 
 **Table of points :**  
-| Level | 1 line | 2 lines | 3 lines | 4 lines (tetris) |  
-|:-----:|:------:|:-------:|:-------:|:----------------:|  
-|0      |40      |100      |300      |1200              |  
-|1      |40\*2   |100\*2   |300\*2   |1200\*2           |  
-|2      |40\*3   |100\*3   |300\*3   |1200\*3           |  
-|...    |...     |...      |...      |...               |  
-|n      |40\*(n-1)|100\*(n-1)|300\*(n-1)|1200\*(n-1)|  
-
-| Level |  1 line | 2 lines | 3 lines | 4 lines |
-|:-----:|:-------:|:-------:|:-------:|:-------:|
-|   0   | test(1) |         |         |         |
-|   1   |         |         |         |         |
-|   2   |         |         |         |         |
+| Level |   1 line  |   2 lines  |   3 lines  | 4 lines (tetris) |
+|:-----:|:---------:|:----------:|:----------:|:----------------:|
+|   0   |     40    |     100    |     300    |       1200       |
+|   1   |   40\*2   |   100\*2   |   300\*2   |      1200\*2     |
+|   2   |   40\*3   |   100\*3   |   300\*3   |      1200\*3     |
+|  ...  |    ...    |     ...    |     ...    |        ...       |
+|   n   | 40\*(n+1) | 100\*(n+1) | 300\*(n+1) |    1200\*(n+1)   |
 
 # Commands
 ## Human Playing
@@ -49,5 +43,6 @@ The rules used here are the basic Tetris rules set :
 # AI
 It's a genetic algorithm.
 For every generation of 50 players, each player plays until it dies (either by dying in the game or reaching the move limit (*pieces landed limit*)). At the end, we generate the next generation. We keep the top 10 of the previous generation. For the rest, we make new players by combining two players of the best first half.
+
 ## Author 
 Tangi Mendès
