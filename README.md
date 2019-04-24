@@ -19,6 +19,12 @@ The rules used here are the basic Tetris rules set :
 |...|...|...|...|...|  
 |n|40\*(n-1)|100\*(n-1)|300\*(n-1)|1200\*(n-1)|  
 
+| Level |  1 line | 2 lines | 3 lines | 4 lines |
+|:-----:|:-------:|:-------:|:-------:|:-------:|
+|   0   | test(1) |         |         |         |
+|   1   |         |         |         |         |
+|   2   |         |         |         |         |
+
 # Commands
 ## Human Playing
 * [←] MOVE TO LEFT
