@@ -74,11 +74,13 @@ class Level{
     ,WIDTH+10,HEIGHT-8*size);
     push();
     textSize(size*0.7);
+    let tot = this.combo1+this.combo2*2+this.combo3*3+this.comboTetris*4;
     text(
     "-single : "+this.combo1+"\n"+
     "-double : "+this.combo2+"\n"+
     "-triple : "+this.combo3+"\n"+
-    "-tetris : "+this.comboTetris+"\n"
+    "-tetris : "+this.comboTetris+"\n"+
+    "-TOTAL : "+tot+"\n"
     ,WIDTH+10,HEIGHT-5*size);
     text("highscore : "+parseInt(highscore).toLocaleString('en'),WIDTH+10,HEIGHT);
     pop();

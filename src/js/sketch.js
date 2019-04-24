@@ -211,9 +211,6 @@ function keyPressed(){
   } else{
     // controls when AI is playing
     switch(characterPressed){
-      case "G":
-        print(shuffle(['A','B','C']));
-        break;
       case "P":
           gamePaused = !gamePaused;
           break;
