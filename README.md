@@ -11,6 +11,7 @@ The rules used here are the basic Tetris rules set :
 * the next piece is known
 
 **Table of points :**  
+
 | Level |   1 line  |   2 lines  |   3 lines  | 4 lines (tetris) |
 |:-----:|:---------:|:----------:|:----------:|:----------------:|
 |   0   |     40    |     100    |     300    |       1200       |
