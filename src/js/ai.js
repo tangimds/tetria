@@ -18,13 +18,21 @@ var movesTaken = 0;
 //0 pas de chute, 1 chute rapide, 2 chute normale
 var speedIndex = 0;
 
-var mutationRate = 0.05;
+var mutationRate = 0.15;
 var mutationStep = 0.2;
 
 //stores shapes
 var bag = [];
 //index for shapes in the bag
 var bagIndex = 0;
+
+function normalize(candidate){
+    var norm = Math.sqrt(candidate.cumulativeHeight * candidate.cumulativeHeight + candidate.rowsCleared * candidate.rowsCleared + candidate.holes * candidate.holes + candidate.roughness * candidate.roughness);
+    candidate.cumulativeHeight /= norm;
+    candidate.rowsCleared /= norm;
+    candidate.holes /= norm;
+    candidate.roughness /= norm;
+}
 
 function showAI(){
     let size = 15;
@@ -59,21 +67,22 @@ function firstGeneration() {
             //unique identifier for a genome
             id: Math.random(),
             //The weight of each row cleared by the given move. the more rows that are cleared, the more this weight increases
-            rowsCleared: Math.random(),
+            rowsCleared: getRandomArbitrary(0.5,1),
             //the absolute height of the highest column to the power of 1.5
             //added so that the algorithm can be able to detect if the blocks are stacking too high
        //     weightedHeight: Math.random()  * -1,
             //The sum of all the column’s heights
-            cumulativeHeight: Math.random() * -1,
+            cumulativeHeight: getRandomArbitrary(0,-1),
             //the highest column minus the lowest column
         //    relativeHeight: Math.random() * -1,
             //the sum of all the empty cells that have a block above them (basically, cells that are unable to be filled)
-            holes: Math.random() * -1,
+            holes:  getRandomArbitrary(0,-1),
             // the sum of absolute differences between the height of each column 
             //(for example, if all the shapes on the grid lie completely flat, then the roughness would equal 0).
-            roughness: Math.random() * -1,
+            roughness: getRandomArbitrary(0,-1),
         };
         //add them to the array
+        normalize(genome);
         genomes.push(genome);
     }
     evaluateNextGenome();
@@ -161,7 +170,7 @@ function showStatsGenome(message){
     print("["+message+"] Genome "+currentGenome+" of generation "+generation+" scores "+genomes[currentGenome].fitness+" pts with "+totalLines+" lines("+lvl.comboTetris+" tetris).");
 }
 
-function makeNextMove() {
+function makeNextMove() {  
     //increment number of moves taken
     movesTaken++;
     if(currentPiece.isLanded())
@@ -228,20 +237,10 @@ function makeNextMove() {
                 currentPiece.update();
             }
         }
-
-        //update our move algorithm
-        /*if (inspectMoveSelection) {
-            moveAlgorithm = move.algorithm;
-        }*/
-        //and set the old drawing to the current
-        //draw = oldDraw;
-        //output the state to the screen
-        //output();
-        //and update the score
     }
 }
 
-function getHighestRatedMove(moves) {
+function getHighestRatedMove(moves) {  
     //start these values off small
     var maxRating = -10000000000000;
     var maxMove = -1;
@@ -265,7 +264,8 @@ function getHighestRatedMove(moves) {
    var move = moves[ties[0]];
    //and set the number of ties
    move.algorithm.ties = ties.length;
-   return move;
+   return move;  
+  
 }
 
 function getAllPossibleMoves() {
@@ -278,7 +278,7 @@ function getAllPossibleMoves() {
 
         var oldX = [];
         //for each iteration
-        for (var t = -5; t <= 5; t++) {
+        for (var t = -4; t <= 5; t++) {
 
             iterations++;
             loadState(lastState);
@@ -379,6 +379,7 @@ function makeChild(mum, dad) {
     if (Math.random() < mutationRate) {
         child.roughness = child.roughness + Math.random() * mutationStep * 2 - mutationStep;
     }
+    normalize(child);
     return child;
 }
 
@@ -524,3 +525,7 @@ function randomChoice(propOne, propTwo) {
 function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
