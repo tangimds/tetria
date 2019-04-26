@@ -25,8 +25,8 @@ The rules used here are the basic Tetris rules set :
 * [←] MOVE TO LEFT
 * [→] MOVE TO RIGHT
 * [↑] ROTATE
-* [↓] FALL FASTER
-* [Space] TELEPORT DOWN
+* [↓] SOFT DROP
+* [Space] HARD DROP
 * [P] PAUSE GAME
 * [A] TOGGLE AI
 * [R] RESET
